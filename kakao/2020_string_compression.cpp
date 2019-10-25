@@ -1,11 +1,21 @@
-#include<iostream>
-#include<algorithm>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-int main() {
+int solution(string s) {
 
 
-    cout<<"hello world!"<<endl;
-    return 0;
+    int answer = 0;
+    int span = 1;
+
+    while(1) {
+
+        for (int i = 0; i < s.length(); i += span) {
+
+        }
+
+    }
+  
+    return answer;
 }
