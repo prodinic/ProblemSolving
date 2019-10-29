@@ -7,7 +7,6 @@
 using namespace std;
 
 // MST : Minimum Spanning Tree
-// Question : 잘 모르겠다
 
 int main() {
 
