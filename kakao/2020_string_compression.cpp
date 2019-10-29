@@ -1,74 +1,91 @@
-#include <iostream>
 #include <string>
 #include <vector>
+#include <iostream>
 #include <algorithm>
-#define MAX_INT 11111
 
 using namespace std;
 
 int solution(string s) {
+    int answer = s.size();
 
+    vector<string> v;
 
-    int answer = s.length();
-    int span = 1;
-    string result;
+    int len = s.size();
 
-    for (int stick = 1; stick < s.length() / 2 + 1; stick++) {
-        // stick is increasing 
-        
-        int len = 0; 
-        
-        for (int i = 0; i < s.length(); i += stick) {
-            string from = s.substr(i, stick);
-            cout<<"from : "<<from<<" | stick : "<<stick<<" | i = "<<i<<endl;
-            int cnt = 1;
+    for (int span = 1; span < (s.length() / 2) + 1; span++) {
 
-            bool flag = 0;
-            for (int j = i + stick; j < s.length(); j += stick) {
-                
-                flag = 1;
-                string to = s.substr(j, stick);
-                cout<<"to : "<<to<<endl;
-
-                // increase cnt when these are same
-                if (from.compare(to) == 0) {
-                    cnt++;
-                } 
-                else {
-                    if (cnt / 100 > 0) {
-                        len += 3;
-                    }
-                    else if (cnt / 10 > 0) {
-                        len += 2;
-                    }
-                    else {
-                        if (cnt % 10 != 1) {
-                            len += 1;
-                        }
-                    }
-                    cout<<cnt<<endl;
-                    len += from.length();
-                    if (cnt != 1) i += cnt; // move index
-                    break;
-                }            
-            }
-
-            if (flag == 0) len += from.length();
-            else {
-                if (cnt != 1) {
-                    len += cnt;
-                    i += cnt; // move index
-                }
-            }
-
-            cout<<"len : "<<len<<endl;
+        int size = 0;
+        // save every split string into vector data structure
+        for (int i = 0; i < s.length(); i += span) {
+            
+            string tmp = s.substr(i, span);
+            // cout<<"tmp : "<<tmp<<endl;
+            v.push_back(tmp);
         }
 
+        for (int i = 0; i < v.size(); i++) {
 
-        answer = min(len, answer);
+            int cnt = 1;
+            if (i == v.size() - 1) {
+                size += v[i].length();
+                cout<<"here!!"<<endl;
+                break;
+            }
+            for (int j = i + 1; j < v.size(); j++) {
+                
+                // increase cnt for the same one
+                if (v[i].compare(v[j]) == 0) {
 
+                    cnt++;
+                    // increase i-idx
+                    if (j == v.size() - 1) {
+                        if (cnt / 1000 > 0) {
+                            size += 4;
+                        }
+                        else if (cnt / 100 > 0) {
+                            size += 3;
+                        }
+                        else if (cnt / 10 > 0) {
+                            size += 2;
+                        }
+                        else {
+                            size += 1;
+                        }
+                        size += v[i].length();
+                        cout<<"from : "<<v[i]<<" | cnt : "<<cnt<<" | size : "<<size<<endl;
+                        i += cnt - 1;
+                    }
+                }
+                else {
+
+                    if (cnt / 1000 > 0) {
+                        size += 4;
+                    }
+                    else if (cnt / 100 > 0) {
+                        size += 3;
+                    }
+                    else if (cnt / 10 > 0) {
+                        size += 2;
+                    }
+                    else {
+                        if (cnt > 1) size += 1;
+                    }
+
+                    size += v[i].length();
+                    cout<<"from : "<<v[i]<<" | cnt : "<<cnt<<" | size : "<<size<<endl;
+                    i += cnt - 1;
+                    break;
+                }
+
+            }
+            // cout<<v[i]<<endl;
+        }
+
+        cout<<"span : "<<span<<" | size : "<<size<<endl;
+        if (size < answer) answer = size;
+
+        v.clear();
     }
 
-    cout <<answer<< endl;
     return answer;
 }
