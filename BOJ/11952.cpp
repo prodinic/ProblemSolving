@@ -3,6 +3,9 @@
 #include <map>
 #include <set>
 #include <limits.h>
+#include <queue>
+#include <cstdlib>
+#include <string.h>
 
 using namespace std; 
 
@@ -11,6 +14,7 @@ set<int> zombie_cities;
 vector<vector<int > > m(100001);
 int hops[100001] = {-1, };
 bool visited[100001] = {false, };
+long long dp[100001];
 int N, M, K, S;
 long long int answer = LLONG_MAX;
 int p, q;
@@ -64,6 +68,35 @@ void DFS2(int from, int hop) {
     }
 }
 
+void BFS() {
+
+    priority_queue<pair<long long, int > > pq;
+    pq.push(make_pair(0, 1));
+
+    while(!pq.empty()) {
+
+        int from = pq.top().second;
+        long long cost = -pq.top().first;
+        int len = m[from].size();
+        pq.pop();
+        
+        if (dp[from] >= 0) continue;
+        dp[from] = cost; 
+
+        for (int i = 0; i < len; i++) {
+            long long to = m[from][i];
+            long long cur_price;
+            if (unsafe_cities.count(to) != 0) cur_price = q;
+            else cur_price = p;
+
+            if (zombie_cities.count(to) != 0) continue;
+            if (dp[to] >= 0) continue;
+
+            pq.push(make_pair(-(cost + cur_price), to));
+        }
+    }
+
+}
 int main() {
 
     int t, a ,b;
@@ -93,9 +126,12 @@ int main() {
 
     // cout << "Size of unsafe_cities : " << unsafe_cities.size() << endl;
     
-    DFS(1, 0); 
+    memset(dp, -1, sizeof(dp));
+    cout << "---" << endl;
+    BFS();
+    cout << "+++" << endl;
 
-    cout << answer << endl;
+    cout << dp[N] << endl;
 
     return 0;
 }

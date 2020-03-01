@@ -19,7 +19,7 @@ void DFS(int a, int b) {
     visited[a][b] = true;
     p.push_back(make_pair(a, b));
     
-    if (a == R - 1) {
+    if (a == R - 1) {   // 바닥에 닿았을 경우 리턴합니다.
         isBlocked = true;
         return;
     }
@@ -38,7 +38,10 @@ void DFS(int a, int b) {
 }
 
 void printAll() {
+    // 입력 : 없음
+    // 출력 : 없음
     // 설명 : 출력을 하는 함수입니다. 
+    
     for (int i = 0; i < R; i++) {
         for (int j = 0; j < C; j++) {
 
@@ -51,19 +54,21 @@ void printAll() {
 }
 
 void down(vector<pair<int, int> > vp) {
+    // 입력 : 클러스터의 위치를 저장하고 있는 리스트
+    // 출력 : 없음
     // 설명 : 해당 클러스터의 위치를 확인 후 가능한한 아래로 움직입니다.
 
     int len = vp.size();
     bool loop = true;
     int hop = 0;
 
-    for (int i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) { //  맵 위에서 현재 클러스터를 지웁니다.
         int x = vp[i].first;
         int y = vp[i].second;
         map[x][y] = '.';
     }
 
-    while(loop) {
+    while(loop) {   // 클러스터가 얼마나 아래로 움직일 수 있는지 확인합니다.
         hop++;
         for (int i = 0; i < len; i++) {
             int x = vp[i].first + hop;
@@ -77,10 +82,7 @@ void down(vector<pair<int, int> > vp) {
         }
     }
 
-    // cout << "hop : "<<hop<<endl;
-    // printAll();
-
-    for (int i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) { // 클러스터를 hop수 만큼 아래로 이동합니다.
         vp[i].first += hop;
         int x = vp[i].first;
         int y = vp[i].second;
@@ -112,7 +114,7 @@ int main() {
         cin >> tmp;
         v.push_back(tmp);
     }
-    // cout << "tmp : "<< tmp << endl;
+    
     for (int i = 0; i < N; i++) {
         int x = R - v[i];
         int y = -1;
@@ -138,7 +140,7 @@ int main() {
         if (y == -1) continue;  // 미네랄이 없을 경우, 다음 사람의 순서로 넘깁니다.
         map[x][y] = '.';
 
-        for (int j = 0; j < 4; j++) {
+        for (int j = 0; j < 4; j++) {   // 상하좌우 네 방향을 탐색합니다.
             
             p.clear();
             memset(visited, false, sizeof(visited));
@@ -157,6 +159,7 @@ int main() {
         }
     }
 
-    printAll();
+    printAll(); // 모든 위치를 출력합니다.
+    
     return 0;
 }

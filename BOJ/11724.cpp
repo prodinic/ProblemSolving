@@ -23,10 +23,8 @@ void init() {
     // 설명 : parent 배열과 level 배열을 초기화한다.
 
     for (int i = 1; i <= N; i++) {
-        
         parent[i] = i;
         level[i] = 1;
-
     }
 }
 
@@ -48,8 +46,9 @@ void merge(int u, int v) {
         return;
 
     if (level[u] > level[v])
-        swap(u, v);
+        swap(u, v); // 부모 노드의 위치를 바꿉니다
 
+    // 항상 v의 깊이가 더 깊거나 일정한 상태에서 u노드의 부모를 v로 설정한다. 다시 말해, 깊이가 더 긴 그래프에 높이가 낮은 그래프를 합친다.
     parent[u] = v;
 
     if (level[u] == level[v])
