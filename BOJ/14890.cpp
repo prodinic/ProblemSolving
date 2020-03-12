@@ -63,7 +63,7 @@ bool doesGoDown(int pos) {
             }
             else {
                 continue;
-            }
+            }ㅋ`
         }
     }
 
