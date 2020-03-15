@@ -33,7 +33,7 @@ void simulation() {
     // Output :
     // Description :
 
-    // find expected location 
+    // find the location expected to be filled with water 
     priority_queue<info> pq;
 
     // init 
