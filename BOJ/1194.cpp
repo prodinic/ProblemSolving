@@ -85,14 +85,14 @@ int main() {
     
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < M; j++) {
-
+                
             cin >> map[i][j];
             if (map[i][j] == '0') {
                 f.x = i;
-                f.y = j;
+                f.y = j;                
                 f.key = 0;
                 f.dist = 0;
-                map[i][j] = '.';
+                map[i][j] = '.';                    
             }
         }
     }   
