@@ -17,8 +17,8 @@ int N, M;
 int dx[] = {0, -1, 0, 1};
 int dy[] = {-1, 0, 1, 0};
 char map[MAX_LEN][MAX_LEN];
-bool visited[MAX_LEN][MAX_LEN][1<<7] = {false, };
-
+bool visited[MAX_LEN][MAX_LEN][1<<6] = {false, };
+    
 void bfs(info p) {
 
     queue<info> q;
