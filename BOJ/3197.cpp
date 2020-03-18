@@ -13,11 +13,8 @@ int R, C;
 char map[MAX_LEN][MAX_LEN];
 bool visited[MAX_LEN][MAX_LEN];
 int ice[MAX_LEN][MAX_LEN] = {0, };
-const int dx[] = {0, -1, 0, 1};
-const int dy[] = {-1, 0, 1, 0};
-int days = -1;
-int answer = INF;
-int _left, _right;
+const int dx[] = {0, -1, 0, 1}, dy[] = {-1, 0, 1, 0};
+int days = -1, answer = INF,_left, _right;
 vector<pair<int, int > > v;
 
 void printAll() {
@@ -31,6 +28,7 @@ void printAll() {
     }
 }
 void simulation() {
+    // 설명 : 해빙 시뮬레이션을 실행합니다.
 
     queue<pp> q;
 
@@ -52,60 +50,37 @@ void simulation() {
             }
         }
     }
-    cout << "queue size : "<<q.size() << endl;
-    // check all position
+
     while(!q.empty()) {
 
-        int x = q.front().second.first;
-        int y = q.front().second.second;
-        int day = q.front().first;
-        q.pop();
-        if (days < day) days = day;
+        int len = q.size();
 
-        for (int i = 0; i < 4; i++) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
+        while(len--) {
+            int x = q.front().second.first;
+            int y = q.front().second.second;
+            int day = q.front().first;
+            q.pop();
 
-            if (nx < 0 || nx >= R || ny < 0 || ny >= C) continue;
-            if (ice[nx][ny] != 0 && ice[nx][ny] <= day) continue;          
+            if (days < day) days = day; // 얼음이 모두 녹기 까지 걸리는 일수를 갱신합니다. 
 
-            // is_ice_here = true;
-            ice[nx][ny] = day + 1;      
-            q.push(make_pair((day + 1), make_pair(nx, ny)));      
+            for (int i = 0; i < 4; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+
+                if (nx < 0 || nx >= R || ny < 0 || ny >= C) continue;
+                if (ice[nx][ny] != 0 && ice[nx][ny] <= day) continue;          
+
+                ice[nx][ny] = day + 1;      
+                q.push(make_pair((day + 1), make_pair(nx, ny)));      
+            }
         }
     }
 
     memset(visited, false, sizeof(visited));
-    // int day;
-    // for (day = 1; ; day++) {
-
-    //     bool is_ice_here = false;
-
-    //     for (int i = 0; i < R; i++) {
-    //         for (int j = 0; j < C; j++) {
-                               
-    //             if (ice[i][j] == day) {
-    //                 for (int k = 0; k < 4; k++) {
-    //                     int nx = i + dx[k];
-    //                     int ny = j + dy[k];
-
-    //                     if (nx < 0 || nx >= R || ny < 0 || ny >= C) continue;
-    //                     if (ice[nx][ny] != 0 && ice[nx][ny] <= day) continue;
-                       
-    //                     is_ice_here = true;
-    //                     ice[nx][ny] = day + 1;
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     if (!is_ice_here) break;
-    // }
-    // days = day;
-    // cout << "days : "<< days << endl;
 }
 
 void bfs() {
+    // 설명 : 이분 탐색을 이용하여 탐색합니다.
 
     pair<int, int > from, to;
     from = make_pair(v[0].first, v[0].second);
@@ -173,7 +148,7 @@ int main() {
     }
 
     simulation();
-    printAll();
+    // printAll();
     bfs();
 
     cout << answer << endl;
