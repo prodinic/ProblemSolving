@@ -6,6 +6,7 @@
 #define MAX_LEN 1501
 #define INF 987654321
 #define pp pair<int, pair<int, int > >
+#define p pair<int, int >
 
 using namespace std;
 
@@ -33,44 +34,48 @@ void simulation() {
     queue<pp> q;
 
     // init
-    for (int i = 0; i < R; i++) {
-        for (int j = 0; j < C; j++) {
+    for (int x = 0; x < R; x++) {
+        for (int y = 0; y < C; y++) {
 
-            if (map[i][j] == '.' || map[i][j] == 'L') ice[i][j] = 1; 
+            if (map[x][y] == '.' || map[x][y] == 'L') ice[x][y] = 1; 
             for (int k = 0; k < 4; k++) {
-                int x = i + dx[k];
-                int y = j + dy[k];
+                int nx = x + dx[k];
+                int ny = y + dy[k];
 
-                if (x < 0 || x >= R || y < 0 || y >= C) continue;
-                if ((map[x][y] == '.' || map[x][y] == 'L') && map[i][j] == 'X' && visited[i][j] == false) {
-
-                    visited[i][j] = true;
-                    q.push(make_pair(2, make_pair(i, j)));
+                if (nx < 0 || nx >= R || ny < 0 || ny >= C) continue;
+                if (visited[x][y]) continue;
+                if ((map[x][y] == '.' || map[x][y] == 'L') && map[nx][ny] == 'X') {
+                    
+                    // ice[nx][ny] = 2;
+                    visited[x][y] = true;
+                    q.push(make_pair(1, make_pair(x, y)));
                 }
             }
         }
     }
 
+ // check all position
     while(!q.empty()) {
 
         int len = q.size();
-
         while(len--) {
             int x = q.front().second.first;
             int y = q.front().second.second;
             int day = q.front().first;
             q.pop();
-
-            if (days < day) days = day; // 얼음이 모두 녹기 까지 걸리는 일수를 갱신합니다. 
+            if (days < day) days = day;
 
             for (int i = 0; i < 4; i++) {
                 int nx = x + dx[i];
                 int ny = y + dy[i];
 
                 if (nx < 0 || nx >= R || ny < 0 || ny >= C) continue;
+                if (visited[nx][ny]) continue;
                 if (ice[nx][ny] != 0 && ice[nx][ny] <= day) continue;          
 
+                // is_ice_here = true;
                 ice[nx][ny] = day + 1;      
+                visited[nx][ny] = true;
                 q.push(make_pair((day + 1), make_pair(nx, ny)));      
             }
         }
@@ -82,7 +87,7 @@ void simulation() {
 void bfs() {
     // 설명 : 이분 탐색을 이용하여 탐색합니다.
 
-    pair<int, int > from, to;
+    p from, to;
     from = make_pair(v[0].first, v[0].second);
     to = make_pair(v[1].first, v[1].second);
     _left = 0;
@@ -92,16 +97,15 @@ void bfs() {
         int mid = (_left + _right) / 2;
         bool flag = false;
 
-        priority_queue<pp> pq;
+        queue<p> q;
        
         visited[from.first][from.second] = true;
-        pq.push(make_pair(0, from));
+        q.push(from);
 
-        while(!pq.empty()) {
-            int x = pq.top().second.first;
-            int y = pq.top().second.second;
-            int step = -pq.top().first;
-            pq.pop();
+        while(!q.empty()) {
+            int x = q.front().first;
+            int y = q.front().second;
+            q.pop();
 
             if (x == to.first && y == to.second) {
                 flag = true;
@@ -117,7 +121,7 @@ void bfs() {
                 if (ice[nx][ny] > mid + 1) continue;
 
                 visited[nx][ny] = true;
-                pq.push(make_pair(-(step + 1), make_pair(nx, ny)));
+                q.push(make_pair(nx, ny));
             }
         }
 
