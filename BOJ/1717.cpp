@@ -1,52 +1,58 @@
 #include <iostream>
-#include <algorithm>
-#include <vector>
-#define MAX_LEN 1000001
+#define MAX_LEN 1000010
+#define ll long long 
 
 using namespace std;
 
-int parent[MAX_LEN];
+ll parent[MAX_LEN];
 int n, m;
-int collapsingFind(int i) {
 
-    int trail, root, lead;
-    for (root = i; parent[root] >= 0; root = parent[root])
+void init() {
+    for (int i = 0; i < MAX_LEN; i++) parent[i] = -1;
+}
 
-    for (trail = i; trail != root; trail = lead) {
-        lead = parent[trail];
-        parent[trail] = root;
-        // cout << "test " << endl; 
+int collapsingFind(int u) {
+    if (parent[u] < 0) return u;
+    else return parent[u] = collapsingFind(parent[u]);
+}
+
+void merge(int u, int v) {
+
+    u = collapsingFind(u);
+    v = collapsingFind(v);
+
+    ll temp = parent[u] + parent[v];
+    // cout << temp << endl;
+    // if v has much more ranks than u
+    if (parent[u] > parent[v]) {
+        parent[u] = v;
+        parent[v] = temp;
+    }
+    else {
+        parent[v] = u;
+        parent[u] = temp;
     }
 
-    return root;
-}
-int simpleFind(int i) {
-    if (parent[i] == i) return i;
-    else return parent[i] = simpleFind(parent[i]);
-}
-void init() {
-    for (int i = 0; i <= n; i++) parent[i] = -1;
-}
-void merge(int i, int j) {
-    i = collapsingFind(i);
-    j = collapsingFind(j);
-
-    if (i != j) parent[i] = j;
+    return; 
 }
 
 int main() {
 
+    ios_base :: sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
     int a, b, k;
     cin >> n >> m;
+    
     init();
+    
     for (int i = 0; i < m; i++) {
 
         cin >> k >> a >> b;
         if (k == 0) merge(a, b);
         else {
-            a = collapsingFind(a);
-            b = collapsingFind(b);
-            if (a != b) cout << "NO" << "\n";
+            if (collapsingFind(a) != collapsingFind(b)) cout << "NO" << "\n";
             else cout << "YES" << "\n";
         }
     }

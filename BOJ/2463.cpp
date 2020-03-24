@@ -1,69 +1,92 @@
 #include <iostream>
 #include <vector>
-#include <string.h>
 #include <algorithm>
-#define MAX_LEN 100001
-#define pp pair<int, pair<int, int > > 
+#define ll long long
+#define MAX_NUM 100005
+#define MOD 1000000000
 
-using namespace std; 
+using namespace std;
 
-int parent[MAX_LEN];
-int answer = 0;
-int N, M, x, y, w;
+struct info {
+    int from, to; 
+    ll cost;
+};
+ll parent[MAX_NUM];
+int N, M;
+ll total = 0, answer = 0;
+info vi[MAX_NUM];
+bool compare(info a, info b) {
 
-int find(int i) {
-
-    if (parent[i] == -1) return i;
-    else {
-        return find(parent[i]);
-    }
+    if (a.cost > b.cost) return true;
+    else return false;
 }
 
-bool merge(int i) {
+int collapsingFind(int u) {
 
-    int r1 = find(i);
-    if (r1 == 0) return false;
-    if (r1 == i) parent[i] = i - 1;
- 
-    return true;
+    if (parent[u] < 0) return u;
+    else return parent[u] = collapsingFind(parent[u]);
+}
+
+void weightedUnion(int u, int v, int cost) {
+
+    u = collapsingFind(u);
+    v = collapsingFind(v);
+
+    int temp = parent[u] + parent[v];
+
+    if (u != v) {
+        answer += (-parent[u]) * (-parent[v]) * total; 
+        answer %= MOD; 
+    
+        if (u > v) {
+            parent[v] = u;
+            parent[u] = temp;
+        }
+        else {
+            parent[u] = v;
+            parent[v] = temp;
+        }       
+    }
+    total -= cost; 
 }
 
 void init() {
-    for (int i = 0; i < MAX_LEN; i++) {
-        parent[i] = -1;
-    }
+    for (int i = 1; i <= N; i++) parent[i] = -1;  
 }
 
-bool compare(pp a, pp b) {
-    if (a.first < a.first) return true;
-    else return false; 
+void solve() {
+
+    sort(vi, vi + M, compare);
+    // printAll();
+    for (int i = 0; i < M; i++) {
+        int from = vi[i].from;
+        int to = vi[i].to;
+        int cost = vi[i].cost;
+
+        weightedUnion(from, to, cost);
+    }
+    cout << answer << "\n";
 }
 
 int main() {
 
-    vector<pp> v;
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
+    int u, v;
+    ll c;
+    info tmp;
     cin >> N >> M;
 
     for (int i = 0; i < M; i++) {
-        cin >> x >> y >> w;
-        v.push_back(make_pair(w, make_pair(x, y)));
+        cin >> u >> v >> c;
+        tmp.from = u, tmp.to = v, tmp.cost = c;
+        vi[i] = tmp;
+        total += c;
     }
-
-    sort(v.begin(), v.end(), compare);
-
-    for (int i = 0; v.size(); i++) {
-        for (int j = i + 1; j < v.size(); j++) {
-
-        }
-    }
+    
     init();
-
-
-
-
-
-
-
-
+    solve();
+    
     return 0;
 }

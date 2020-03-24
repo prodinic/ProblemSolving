@@ -1,46 +1,68 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <limits.h>
-#define ll long long int
+#include <stdio.h>
+#define MAX_VAL 2147483647
+#define MAX_LEN 10001
+#define ui unsigned int
 
-using namespace std; 
+// ui BinarySearch(int* N, int* K, int v[]) {
+//     // 설명 : 이분 탐색을 수행합니다.
 
-int N, K;
+//     int k, i;   
+//     ui answer = 0, left = 0, right = MAX_VAL, mid;
+    
+//     while(left <= right) {
+//         mid = (left + right) / 2;
+//         k = 0;
+        
+//         // 길이가 mid인 랜선의 합을 구합니다.
+//         for (i = 0; i < *K; i++) {
+//             k += v[i] / mid;
+//         }   
 
+//         // 모자를 경우, 길이를 줄입니다.
+//         if (k < *N) {
+//             right = mid - 1;
+//         }
+//         // 이미 충분한 경우, 길이를 늘립니다.
+//         else {
+//             answer = mid;
+//             left = mid + 1;
+//         }
+//     }
+
+//     return answer;
+// }
 
 int main() {
 
-    ll answer = 0;
-    ll a;
-    cin >> N >> K;
-    vector<ll > v;
+    int i, N, K;
+    int v[MAX_LEN];
 
-    for (int i = 0; i < N; i++) {
-        cin >> a;
-        v.push_back(a);
-    }
-
-    ll left = 0, right = INT_MAX;
-
+    scanf("%d %d", &K, &N);
+    for (i = 0; i < K; i++) scanf("%d", v + i);
+    
+    int k;   
+    ui answer = 0, left = 0, right = MAX_VAL, mid;
+    
     while(left <= right) {
-        ll mid = (left + right) / 2;
-        ll k = 0;
-
-        for (int i = 0; i < v.size(); i++) {
+        mid = (left + right) / 2;
+        k = 0;
+        
+        // 길이가 mid인 랜선의 합을 구합니다.
+        for (i = 0; i < K; i++) {
             k += v[i] / mid;
-        }
+        }   
 
-        if (k < K) {
+        // 모자를 경우, 길이를 줄입니다.
+        if (k < N) {
             right = mid - 1;
         }
+        // 이미 충분한 경우, 길이를 늘립니다.
         else {
             answer = mid;
             left = mid + 1;
         }
     }
 
-
-    cout << answer << endl;
+    printf("%u\n", answer);  // 정답을 출력합니다.
     return 0;
 }

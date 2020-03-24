@@ -1,53 +1,43 @@
-#include <iostream>
-#include <vector>
-#include <string.h>
-#include <algorithm>
-#define MAX_LEN 100001
-#define pp pair<int, pair<int, int > > 
+#include <stdio.h>
+#define MAX_NUM 100001
 
-using namespace std; 
+int parent[MAX_NUM];
 
-int parent[MAX_LEN] = {-1, };
-int answer = 0;
-int G, P, a;
+int collapsingFind(int u) {
 
-int collapsingFind(int i) {
+    if (parent[u] == -1) return u;
+    else return parent[u] = collapsingFind(u); 
+}
+bool isPossible(int u) {
 
-    int root, trail, lead;
-    for (root = i; parent[root] >= 0; root = parent[root])
-    
-    for (trail = i; trail != root; trail = lead) {
-        lead = parent[trail];
-        parent[trail] = root;
+    u = collapsingFind(u);
+    if (u == 0) return false;
+    else {
+        parent[u] = u - 1;
+        return true;
     }
-
-    return root;
 }
 
-bool merge(int i) {
-    
-    int r1 = collapsingFind(i);
-    if (r1 == 0) return false;
-    parent[r1] = r1 - 1;
-  
-    return true;
+void init(int G) {
+    for (int i = 0; i <= G; i++) parent[i] = -1;
 }
 
-void init() {
-    for (int i = 0; i < MAX_LEN; i++) parent[i] = -1;
-}
 int main() {
 
-    int answer = 0;
-    cin >> G;
-    cin >> P;
-    init();
+    int G, P, answer = 0, a;
+    scanf("%d", &G);
+    getchar();
+    scanf("%d", &P);
+    getchar();    
+    init(G);
+    printf("%d %d\n", G, P);
     for (int i = 0; i < P; i++) {
-        cin >> a;
-        if (merge(a)) answer++;
+        scanf("%d", &a);
+        getchar();    
+        if(isPossible(a)) answer++;
         else break;
-    }
+    }   
 
-    cout << answer << endl;
+    printf("%d\n", answer);
     return 0;
 }

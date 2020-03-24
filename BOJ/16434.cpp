@@ -1,79 +1,74 @@
 #include <iostream>
-#include <algorithm>
-#include <vector>
 #include <limits.h>
-#define pp pair<int, pair<int, int > >
 #define ll long long int
+#define MAX_NUM 123457
 
 using namespace std; 
 
-int N, H;
-int t, a, h;
-vector<pp> v;
-
 int main() {
 
-    ll answer = 0;
+	ios::sync_with_stdio(false);
+	cin.tie(0); cout.tie(0);
+
+    struct info {
+        int t, a, h;
+    };
+    info v[MAX_NUM];
+
+    int N, H, t, a, h, i;
+
     cin >> N >> H;
 
     for (int i = 0; i < N; i++) {
 
         cin >> t >> a >> h;
-        v.push_back(make_pair(t, make_pair(a, h)));
+        v[i].t = t, v[i].a = a, v[i].h = h;
     }
 
-    ll _left = 0, _right = LLONG_MAX;
-    
-    while(_left < _right) {
-    
-        ll mid = (_left + _right) / 2;
-        // answer = mid;
-        bool flag = false;
-        ll total = mid;
-        ll attack = H;
+    ll answer = 0, _left = 0, _right = LLONG_MAX, mid, total, attack;
+    bool flag;
 
-        for (int i = 0; i < N; i++) {
-            int info = v[i].first;
-            int power = v[i].second.first;
-            int hp = v[i].second.second;
+    while(_left <= _right) {    // 이분 탐색 합니다.
+    
+        mid = (_left + _right) / 2;
+        flag = false;
+        total = mid, attack = H;
 
-            if (info == 1) {    // attack
-                if (hp % attack == 0) {
-                    if (total <= ((hp / attack) - 1) * power) {
-                        // cout << "test1" << "\n";
+        for (i = 0; i < N; i++) {
+            t = v[i].t;
+            a = v[i].a;
+            h = v[i].h;
+
+            if (t == 1) {    // 몹을 상대합니다.
+                if (h % attack == 0) {  // 공격했을 때, 나머지가 0 입니다.
+                    if (total <= ((h / attack) - 1) * a) {  // 내가 몹보다 먼저 죽을 경우, 최소 HP를 늘리고 다시 이분탐색 합니다.
                         _left = mid + 1;
                         flag = true;
                         break;
                     }
-                    else {
-                        total -= ((hp / attack) - 1) * power;
-                    }
+                    else total -= ((h / attack) - 1) * a;   // 남은 채력을 저장합니다.
                 }
-                else {
-                    if (total <= (hp / attack) * power) {
-                        // cout << "total : "<<total<< "| test2" << "\n";
-                        _left = mid + 1;
-                        // cout << "_left : "<<_left << " | right : " <<_right << "\n";
+                else {  // 공격했을 때, 나머지가 0이 아닙니다.
+                    if (total <= (h / attack) * a) {    // 내가 몹보다 먼저 죽을 경우, 최소 HP를 늘리고 다시 이분탐색 합니다.
+                         _left = mid + 1;
                         flag = true;
                         break;
                     }
-                    else {
-                        total -= (hp / attack) * power;
-                    }
+                    else total -= (h / attack) * a; // 남은 체력을 저장합니다.
                 }
             }
             else {  // potion
-                attack += power;
-                if (total + hp > mid) total = mid;
-                else total += hp;
+                attack += a;
+                if (total + h > mid) total = mid;
+                else total += h;
             }
         }
-
-        if(!flag) _right = mid;
-        answer = mid;
-        // cout << "answer : "<<answer << "\n";
+        if(!flag) { // 모든 방을 돌고 난 후, 최소 HP를 줄이고 다시 이분탐색 합니다.
+            _right = mid - 1;
+            answer = mid;
+        }
     }
-    answer = (_left + _right) / 2;
-    cout << answer << endl;
+
+    cout << answer << "\n";
     return 0;
 }
