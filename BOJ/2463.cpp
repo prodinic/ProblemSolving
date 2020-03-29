@@ -40,7 +40,7 @@ void weightedUnion(int u, int v, int cost) {
     
         if (u > v) {
             parent[v] = u;
-            parent[u] = temp;
+            parent[u] = temp;   
         }
         else {
             parent[u] = v;
