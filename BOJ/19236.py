@@ -32,7 +32,7 @@ def isFishMovable(x, y, dir):
     return flag
 
 def moveShark():
-    # return the number of fish
+    # return the number of fish eaten by a shark
 
 
 def moveFishes():
